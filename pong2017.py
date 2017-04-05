@@ -5,6 +5,9 @@ import sys, os
 # Desde alli elegimos que importar.
 from pygame.locals import *
 
+#Inicializamos la libreria:
+pygame.init()
+
 # Centralizado de ventana (Debe ir antes que la misma).
 x = 180
 y = 100
@@ -21,6 +24,9 @@ pantalla = pygame.display.set_mode((ancho,alto))
 pygame.display.set_caption("Pong 2017")
 pygame.key.set_repeat(1,1)
 
+# Cargamos la imagen para el Fondo.
+fondo = pygame.image.load("02 Imagenes/Fondo Pong.jpg")
+
 # Creamos las Paletas.
 paletajugador1 = pygame.image.load("02 Imagenes/Paleta Pong.png")
 paletajugador2 = pygame.image.load("02 Imagenes/Paleta Pong.png")
@@ -29,6 +35,7 @@ paletajugador2 = pygame.image.load("02 Imagenes/Paleta Pong.png")
 sprite_paletajugador1 = pygame.sprite.Sprite()
 sprite_paletajugador1.image = paletajugador1
 sprite_paletajugador1.rect = paletajugador1.get_rect()
+sprite_paletajugador1.centery = sprite_paletajugador1.rect.height/2
 sprite_paletajugador2 = pygame.sprite.Sprite()
 sprite_paletajugador2.image = paletajugador2
 sprite_paletajugador2.rect = paletajugador2.get_rect()
@@ -49,43 +56,44 @@ sprite_pelota.rect = pelota.get_rect()
 # Posicion y Movimiento.
 sprite_pelota.rect.x = 200
 sprite_pelota.rect.y = 200
-pelota_velX = 15
-pelota_velY = 15
+pelota_velX = 10
+pelota_velY = 10
 
-# Cargamos la imagen para el Fondo.
-fondo = pygame.image.load("02 Imagenes/Fondo Pong.jpg")
-
-
+#Inicializamos las fuentes:
+pygame.font.init()
+fuente = pygame.font.Font(None,30)
+texto = fuente.render("Puntaje",0,(255,255,255))
+puntos = 0
 
 while True:
 	# Relación de eventos y comandos.
-	if pygame.event.get(pygame.QUIT):
-		break
-	if pygame.event.get(pygame.MOUSEMOTION):
-		posicion = pygame.mouse.get_pos()
-		print "Posicion:",posicion
-#	pygame.event.pump()
-
 	for evento in pygame.event.get():
 		teclas = pygame.key.get_pressed()
 		if evento.type == QUIT:
 			sys.exit()
-		if evento.type == pygame.KEYDOWN:
-			if teclas[K_DOWN]:
+		if evento.type == KEYDOWN:
+			if teclas[K_s]:
 				sprite_paletajugador1.rect.y += paletaJ1_velY
-			if teclas[K_UP]:
+			if teclas[K_w]:
 				sprite_paletajugador1.rect.y -= paletaJ1_velY
+			if teclas[K_UP]:
+				sprite_paletajugador2.rect.y -= paletaJ2_velY
+			if teclas[K_DOWN]:
+				sprite_paletajugador2.rect.y += paletaJ2_velY
+#		if evento.type == MOUSEMOTION:
+#			posicion = pygame.mouse.get_pos()
 
 	# Presentamos la imagen de Fondo.
-	pantalla.blit(fondo,(0,0))
+#	pantalla.blit(fondo,(0,0))
 	# Presentamos la imagen de la Paleta de Jugadores y su Movimiento.
 	# La tupla posiciona el objeto según los valores (X,Y) 
 	pantalla.blit(sprite_paletajugador1.image,(sprite_paletajugador1.rect))
 	pantalla.blit(sprite_paletajugador2.image,(sprite_paletajugador2.rect))
 #	sprite_paletajugador1.rect.y += paletaJ1_velY
 #	sprite_paletajugador2.rect.y += paletaJ2_velY
-	# Vinculamos la posicion de la pelota con el centro de la Paleta2
-	sprite_paletajugador2.rect.centery = sprite_pelota.rect.centery
+	# Vinculamos la posicion Paletas con otra cosa.
+#	sprite_paletajugador1.rect.centery = sprite_pelota.rect.centery
+#	sprite_paletajugador2.rect.centery = sprite_pelota.rect.centery
 	# Relacion con los Limites de la pantalla.
 	if sprite_paletajugador1.rect.y + sprite_paletajugador1.rect.height > alto:
 		sprite_paletajugador1.rect.y = alto-sprite_paletajugador1.rect.height
@@ -114,11 +122,18 @@ while True:
 
 	# Colision de Sprites.
 	if sprite_pelota.rect.colliderect(sprite_paletajugador1):
-		pelota_velX = pelota_velX*-1
+		pelota_velX = (pelota_velX-1)*-1
 		print "COLISION 1"
+		print "VelX:",pelota_velX,"VelY",pelota_velY
 	if sprite_pelota.rect.colliderect(sprite_paletajugador2):
-		pelota_velX = pelota_velX*-1
+		pelota_velX = (pelota_velX+1)*-1
 		print "COLISION 2"
+		print "VelX:",pelota_velX,"VelY",pelota_velY
+	
+	#Ubicamos la fuente del Puntaje y el Puntaje:
+	pantalla.blit(texto,(ancho/2-80,10))
+	puntaje = fuente.render(str(puntos),0,(100,255,100))
+	pantalla.blit(puntaje,(ancho/2+10,10))
 
 	clock.tick(FPS)
 	
