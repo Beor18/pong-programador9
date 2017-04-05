@@ -26,6 +26,10 @@ pygame.key.set_repeat(1,1)
 
 # Cargamos la imagen para el Fondo.
 fondo = pygame.image.load("02 Imagenes/Fondo Pong.jpg")
+# Cargamos la Musica y Sonidos.
+pygame.mixer.init()
+sonido_choque = pygame.mixer.Sound("03 Sonidos y Musicas/Tennis.ogg")
+sonido_punto = pygame.mixer.Sound("03 Sonidos y Musicas/Aplausos.ogg")
 
 # Creamos las Paletas.
 paletajugador1 = pygame.image.load("02 Imagenes/Paleta Pong.png")
@@ -115,9 +119,11 @@ while True:
 	if sprite_pelota.rect.x + sprite_pelota.rect.width > ancho:
 		pelota_velX = pelota_velX*-1
 		puntosj1 += 1
+		sonido_punto.play()
 	if sprite_pelota.rect.x < 10:
 		pelota_velX = pelota_velX*-1
 		puntosj2 += 1
+		sonido_punto.play()
 		
 	if sprite_pelota.rect.y + sprite_pelota.rect.height > alto:
 		pelota_velY = pelota_velY*-1
@@ -129,10 +135,12 @@ while True:
 		pelota_velX = (pelota_velX-1)*-1
 		print "COLISION 1"
 		print "VelX:",pelota_velX,"VelY",pelota_velY
+		sonido_choque.play()
 	if sprite_pelota.rect.colliderect(sprite_paletajugador2):
 		pelota_velX = (pelota_velX+1)*-1
 		print "COLISION 2"
 		print "VelX:",pelota_velX,"VelY",pelota_velY
+		sonido_choque.play()
 	
 	#Ubicamos la fuente del Puntaje y el Puntaje:
 	pantalla.blit(texto1,(ancho/2-200,10))
