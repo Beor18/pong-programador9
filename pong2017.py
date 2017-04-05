@@ -41,9 +41,9 @@ sprite_paletajugador2.image = paletajugador2
 sprite_paletajugador2.rect = paletajugador2.get_rect()
 sprite_paletajugador2.centery = sprite_paletajugador2.rect.height/2
 # Posicion y Movimiento.
-sprite_paletajugador1.rect.x = 100
+sprite_paletajugador1.rect.x = 80
 sprite_paletajugador1.rect.y = 200
-sprite_paletajugador2.rect.x = 550
+sprite_paletajugador2.rect.x = 560
 sprite_paletajugador2.rect.y = 200
 paletaJ1_velY = 15
 paletaJ2_velY = 15
@@ -62,8 +62,10 @@ pelota_velY = 10
 #Inicializamos las fuentes:
 pygame.font.init()
 fuente = pygame.font.Font(None,30)
-texto = fuente.render("Puntaje",0,(255,255,255))
-puntos = 0
+texto1 = fuente.render("Puntaje J1",0,(255,255,255))
+texto2 = fuente.render("Puntaje J2",0,(255,255,255))
+puntosj1 = 0
+puntosj2 = 0
 
 while True:
 	# Relación de eventos y comandos.
@@ -84,7 +86,7 @@ while True:
 #			posicion = pygame.mouse.get_pos()
 
 	# Presentamos la imagen de Fondo.
-#	pantalla.blit(fondo,(0,0))
+	pantalla.blit(fondo,(0,0))
 	# Presentamos la imagen de la Paleta de Jugadores y su Movimiento.
 	# La tupla posiciona el objeto según los valores (X,Y) 
 	pantalla.blit(sprite_paletajugador1.image,(sprite_paletajugador1.rect))
@@ -112,9 +114,11 @@ while True:
 	# Relacion con los Limites de la pantalla.
 	if sprite_pelota.rect.x + sprite_pelota.rect.width > ancho:
 		pelota_velX = pelota_velX*-1
+		puntosj1 += 1
 	if sprite_pelota.rect.x < 10:
 		pelota_velX = pelota_velX*-1
-
+		puntosj2 += 1
+		
 	if sprite_pelota.rect.y + sprite_pelota.rect.height > alto:
 		pelota_velY = pelota_velY*-1
 	if sprite_pelota.rect.y < 10:
@@ -131,9 +135,12 @@ while True:
 		print "VelX:",pelota_velX,"VelY",pelota_velY
 	
 	#Ubicamos la fuente del Puntaje y el Puntaje:
-	pantalla.blit(texto,(ancho/2-80,10))
-	puntaje = fuente.render(str(puntos),0,(100,255,100))
-	pantalla.blit(puntaje,(ancho/2+10,10))
+	pantalla.blit(texto1,(ancho/2-200,10))
+	pantalla.blit(texto2,(ancho/2+100,10))
+	puntajej1 = fuente.render(str(puntosj1),0,(20,20,255))
+	puntajej2 = fuente.render(str(puntosj2),0,(255,20,20))
+	pantalla.blit(puntajej1,(ancho/2-90,10))
+	pantalla.blit(puntajej2,(ancho/2+210,10))
 
 	clock.tick(FPS)
 	
